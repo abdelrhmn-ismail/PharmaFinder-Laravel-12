@@ -28,8 +28,9 @@ return new class extends Migration
             $table->boolean('is_24_hours')->default(false);
             $table->timestamps();
             
-            // Add spatial index for location-based queries
-            $table->spatialIndex(['latitude', 'longitude']);
+            // Add indexes for location-based queries
+            $table->index('latitude');
+            $table->index('longitude');
         });
     }
 

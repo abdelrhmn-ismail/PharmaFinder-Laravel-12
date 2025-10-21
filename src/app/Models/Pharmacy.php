@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Pharmacy extends Model
 {
+    use HasFactory;
     protected $fillable = [
         'name',
         'slug',
@@ -55,3 +57,4 @@ class Pharmacy extends Model
                     ->orderBy('distance');
     }
 }
+

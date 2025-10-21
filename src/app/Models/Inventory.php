@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Inventory extends Model
 {
+    use HasFactory;
     protected $fillable = [
         'pharmacy_id',
         'product_variant_id',
@@ -42,3 +44,4 @@ class Inventory extends Model
                     ->with('pharmacy');
     }
 }
+
