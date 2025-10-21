@@ -32,6 +32,6 @@ Route::prefix('v1')->group(function () {
         ->name('pharmacies.inventory.bulk-update');
     
     // Search
-    Route::get('search', [SearchController::class, 'search'])
-        ->name('search');
+    Route::get('search', [SearchController::class, 'search'])->name('search');
+    Route::get('search/facets', [SearchController::class, 'getFacets'])->name('search.facets');
 });
