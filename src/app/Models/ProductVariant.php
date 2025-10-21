@@ -8,7 +8,8 @@ use Laravel\Scout\Searchable;
 
 class ProductVariant extends Model
 {
-    use HasFactory, Searchable;
+    use HasFactory;
+    use Searchable;
     
     /**
      * Get the indexable data array for the model.

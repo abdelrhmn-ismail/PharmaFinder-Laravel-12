@@ -14,6 +14,10 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
+Route::get('/debug', function () {
+    return response()->json(['message' => 'API is working']);
+});
+
 Route::prefix('v1')->group(function () {
     // Products
     Route::apiResource('products', ProductController::class);

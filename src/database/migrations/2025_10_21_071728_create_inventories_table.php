@@ -18,7 +18,7 @@ return new class extends Migration
             $table->decimal('price', 10, 2);
             $table->integer('quantity');
             $table->boolean('is_available')->default(true);
-            $table->timestamp('last_stock_update');
+            $table->timestamp('last_stock_update')->useCurrent();
             $table->timestamps();
             
             // Create a unique constraint to prevent duplicate entries

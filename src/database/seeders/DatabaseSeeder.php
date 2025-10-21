@@ -102,15 +102,18 @@ class DatabaseSeeder extends Seeder
         }
 
         $this->command->info('Creating inventory records...');
-        // Create inventory records in chunks
+        // Create inventory records in smaller chunks to avoid MySQL placeholder limit
         $variants = \App\Models\ProductVariant::all(['id', 'suggested_price']);
         $pharmacies = \App\Models\Pharmacy::all(['id']);
         
-        foreach ($pharmacies->chunk(100) as $pharmacyChunk) {
+        // Reduce number of variants per pharmacy and total pharmacies for more manageable data
+        $pharmaciesForInventory = $pharmacies->random(5000); // Only create inventory for 5000 pharmacies
+        
+        foreach ($pharmaciesForInventory->chunk(10) as $pharmacyChunk) {
             $inventoryRecords = [];
             foreach ($pharmacyChunk as $pharmacy) {
-                // Each pharmacy stocks 100-300 random variants
-                $randomVariants = $variants->random(rand(100, 300));
+                // Each pharmacy stocks 20-50 random variants (reduced from 100-300)
+                $randomVariants = $variants->random(rand(20, 50));
                 foreach ($randomVariants as $variant) {
                     $inventoryRecords[] = [
                         'pharmacy_id' => $pharmacy->id,
@@ -123,8 +126,18 @@ class DatabaseSeeder extends Seeder
                         'updated_at' => now(),
                     ];
                 }
+                
+                // Insert in chunks of 100 to avoid MySQL placeholder limit
+                foreach (array_chunk($inventoryRecords, 100) as $chunk) {
+                    \App\Models\Inventory::insert($chunk);
+                }
+                $inventoryRecords = []; // Clear after inserting
             }
-            \App\Models\Inventory::insert($inventoryRecords);
+            
+            // Show progress
+            if ($pharmacyChunk->count() > 0) {
+                $this->command->info("Created inventory for pharmacy batch ending with ID: " . $pharmacyChunk->last()->id);
+            }
         }
 
         $this->command->info('Seeding completed successfully!');
