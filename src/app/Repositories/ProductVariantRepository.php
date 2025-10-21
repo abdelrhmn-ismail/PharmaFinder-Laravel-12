@@ -13,12 +13,12 @@ class ProductVariantRepository extends BaseRepository
 
     public function getWithRelations()
     {
-        return $this->model->with(['product'])->paginate();
+        return $this->model->with(['product.manufacturer', 'product.category'])->paginate();
     }
 
     public function findWithRelations(int $id)
     {
-        return $this->model->with(['product', 'inventory'])->findOrFail($id);
+        return $this->model->with(['product', 'inventories'])->findOrFail($id);
     }
 
     public function findBySku(string $sku)
