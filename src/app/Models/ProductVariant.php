@@ -4,10 +4,36 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
 
 class ProductVariant extends Model
 {
-    use HasFactory;
+    use HasFactory, Searchable;
+    
+    /**
+     * Get the indexable data array for the model.
+     */
+    public function toSearchableArray(): array
+    {
+        $array = $this->toArray();
+
+        // Load the relationships we want to include in the search
+        $this->load(['product.manufacturer', 'product.category']);
+
+        // Add related data to the searchable array
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'sku' => $this->sku,
+            'description' => $this->description,
+            'dosage' => $this->dosage,
+            'form' => $this->form,
+            'package_size' => $this->package_size,
+            'product_name' => $this->product->name,
+            'manufacturer_name' => $this->product->manufacturer->name,
+            'category_name' => $this->product->category->name,
+        ];
+    }
     protected $fillable = [
         'product_id',
         'name',
